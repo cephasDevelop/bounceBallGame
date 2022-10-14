@@ -200,6 +200,34 @@ function checkBorderCollision() {
     }
     moveBall();
 }
+// const blockDim = {
+//     width: 100,
+//     height: 20
+// };
+// this.bottomLeft = [xAxis,yAxis];
+function blockCollisions() {
+    for (let i = 0; i < allBlocks.length; i++){
+                
+    }
+    if (ball.arrMotion[0] == 2 && ball.arrMotion[1] == 2) {
+        if (
+            (((ball.y + ballDimension >= allBlocks[i].bottomLeft[1])&&(allBlocks[i].bottomLeft[1]+blockDim.height>=ball.y+ballDimension)) ||
+            (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
+            (ball.x + ballDimension == allBlocks.bottomLeft[0])
+        ) {
+            ball.moveSecondQuadrant();
+            ball.move();
+        }
+        if (
+            (((ball.x + ballDimension >= allBlocks[i].bottomLeft[0])&&(allBlocks[i].bottomLeft[0]+blockDim.width>=ball.x+ballDimension)) ||
+            (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
+            (ball.y + ballDimension == allBlocks.bottomLeft[y])
+        ) {
+            ball.moveFourthQuadrant();
+            ball.move();
+        }
+    }
+}
 
 //  CHECK FOR GAME OVER
 function checkGameOver() {
