@@ -121,8 +121,6 @@ function bounceBall() {
 
 
 
-
-
 // CHECKING FOR COLLISIONS
 function checkBorderCollision() {
     if (ball.arrMotion[0] == 2 && ball.arrMotion[1] == 2) {// DIRECTION [2,2]
