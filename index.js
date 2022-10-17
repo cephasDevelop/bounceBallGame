@@ -8,10 +8,10 @@ const blockDim = {
 };
 
 const MOTION_DIRECTION = {
-    firstQuadrant: [2, 2],
-    secondQuadrant: [-2, 2],
-    thirdQuadrant: [-2, -2],
-    fourthQuadrant:[2, -2]
+    firstQuadrant: [1, 1],
+    secondQuadrant: [-1, 1],
+    thirdQuadrant: [-1, -1],
+    fourthQuadrant:[1, -1]
 };
 
 class Block{ 
@@ -20,10 +20,6 @@ class Block{
         this.bottomRight = [xAxis+blockDim.width, yAxis];
         this.TopLeft = [xAxis, yAxis+blockDim.height];
         this.TopRight = [xAxis + blockDim.width, yAxis + blockDim.height];
-        // this.blown = function (b,dir) {
-            
-        // }
-        // destroyed= function funcName (params){ return params; };
     }    
 }
 
@@ -41,7 +37,7 @@ class Bouncing{
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.arrMotion = MOTION_DIRECTION.secondQuadrant;
+        this.arrMotion = MOTION_DIRECTION.firstQuadrant;
         this.moveFirstQuadrant = function () {
             this.arrMotion = MOTION_DIRECTION.firstQuadrant
         }
@@ -107,216 +103,16 @@ function moveBall() {
 //---------------------------------
 
 
+
 // MOVE BALL
 function bounceBall() {
     ball.move();
     moveBall();
     checkBorderCollision();
-    blockCollisions();
+    // blockCollisions();
     checkGameOver();
 }
 //--------------------------
-
-
-
-
-
-
-// CHECKING FOR COLLISIONS
-function checkBorderCollision() {
-    if (ball.arrMotion[0] == 2 && ball.arrMotion[1] == 2) {// DIRECTION [2,2]
-        if (// MEET THE RIGHT BORDER
-            (ball.x == (gridDimension[0] - ballDimension)) &&
-            (ball.y<(gridDimension[1] - ballDimension))
-        ) {
-            ball.moveSecondQuadrant();
-            ball.move();
-        } else if (// MEET THE TOP
-            (ball.x > 0 && ball.x < (gridDimension[0] - ballDimension)) &&
-            (ball.y == (gridDimension[1] - ballDimension))
-        ) {
-            ball.moveFourthQuadrant();
-            ball.move();
-        } else if (
-            (ball.x == (gridDimension[0] - ballDimension)) &&
-            (ball.y == (gridDimension[1] - ballDimension))
-        ) {
-            ball.moveThirdQuadrant();
-            ball.move();
-        }
-    }
-    if (ball.arrMotion[0] == -2 && ball.arrMotion[1] == 2) {// DIRECTION [-2,2]
-        if (// MEET THE LEFT
-            (ball.x == 0 &&
-            (ball.y<(gridDimension[1] - ballDimension)))
-        ) {
-            ball.movefirstQuadrant();
-            ball.move();
-        } else if (// MEET THE TOP
-            (ball.x > 0 && ball.x < (gridDimension[0] - ballDimension)) &&
-            (ball.y == (gridDimension[1] - ballDimension))
-        ) {
-            ball.moveThirdQuadrant();
-            ball.move();
-        } else if (
-            (ball.x == 0 &&
-            (ball.y == (gridDimension[1] - ballDimension)))
-        ) {
-            ball.moveFourthQuadrant();
-            ball.move();
-        }
-    }
-    if (ball.arrMotion[0] == -2 && ball.arrMotion[1] == -2) {// DIRECTION [-2,-2]
-        if (// MEET THE LEFT
-            (ball.x == 0 &&
-            (ball.y<(gridDimension[1] - ballDimension)))
-        ) {
-            ball.moveFourthQuadrant();
-            ball.move();
-        }
-        else if (// MEET THE BOTTOM/ USER
-            ((ball.x  >= player.x) && (ball.x < player.x+blockDim.width)) &&
-            (ball.y == player.y+blockDim.height)
-        ) {
-            ball.moveSecondQuadrant();
-            ball.move();
-        }
-    }
-    if (ball.arrMotion[0] == 2 && ball.arrMotion[1] == -2) {// DIRECTION [2,-2]
-        if (// MEET THE RIGHT BORDER
-            (ball.x == (gridDimension[0] - ballDimension)) &&
-            (ball.y<(gridDimension[1] - ballDimension))
-        ) {
-            ball.moveThirdQuadrant();
-            ball.move();
-        }
-        else if (// MEET THE BOTTOM/ USER
-            ((ball.x  >= player.x) && (ball.x < player.x+blockDim.width)) &&
-            (ball.y == player.y+blockDim.height)
-        ) {
-            ball.moveFirstQuadrant();
-            ball.move();
-        }
-    }
-    moveBall();
-}
-// const blockDim = {
-//     width: 100,
-//     height: 20
-// };
-// this.bottomLeft = [xAxis,yAxis];
-function blockCollisions() {
-    for (let i = 0; i < allBlocks.length; i++) {
-                
-        if (ball.arrMotion[0] == 2 && ball.arrMotion[1] == 2) {
-            if (
-                (
-                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
-                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
-                (ball.x + ballDimension == allBlocks.bottomLeft[0])
-            ) {
-                ball.moveSecondQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-            if (
-                (
-                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
-                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
-                (ball.y + ballDimension == allBlocks.bottomLeft[1])
-            ) {
-                ball.moveFourthQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-        }// first case ended
-        if (ball.arrMotion[0] == -2 && ball.arrMotion[1] == -2) {
-            if (
-                (
-                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
-                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
-                (ball.x + ballDimension == allBlocks.bottomLeft[0] + blockDim.width)
-            ) {
-                ball.moveFourthQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-            if (
-                (
-                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
-                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
-                (ball.y == allBlocks.bottomLeft[1] + blockDim.height)
-            ) {
-                ball.moveSecondQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-        }// second case ended
-        if (ball.arrMotion[0] == -2 && ball.arrMotion[1] == 2) {
-            if (
-                (
-                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
-                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
-                (ball.x == allBlocks.bottomLeft[0] + blockDim.width)
-            ) {
-                ball.moveFirstQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-            if (
-                (
-                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
-                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
-                (ball.y + ballDimension == allBlocks.bottomLeft[1])
-            ) {
-                ball.moveThirdQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-        }// third case ended
-        if (ball.arrMotion[0] == 2 && ball.arrMotion[1] == -2) {
-            if (
-                (
-                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
-                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
-                (ball.x + ballDimension == allBlocks.bottomLeft[0])
-            ) {
-                ball.moveThirdQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-            if (
-                (
-                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
-                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
-                (ball.y == allBlocks.bottomLeft[1] + blockDim.height)
-            ) {
-                ball.moveFirstQuadrant();
-                ball.move();
-                moveBall();
-                removeBlock(i);
-            }
-        }// fourth case ended
-        
-    }
-}
-function removeBlock(i) {
-    blocks.splice(i, 1);
-    let theBlocks = Array.from(document.querySelectorAll('.block'));
-    theBlocks[i].classList.remove('block');
-    if (blocks.length == 0) { 
-        clearInterval(ballTimer);
-        document.removeEventListener('keydown', moveUser);
-    }
-}
-
 //  CHECK FOR GAME OVER
 function checkGameOver() {
     if (ball.y < player.y) {
@@ -325,6 +121,126 @@ function checkGameOver() {
     }
 }
 //-----------------------------
+
+
+
+
+
+
+
+// const blockDim = {
+//     width: 100,
+//     height: 20
+// };
+// this.bottomLeft = [xAxis,yAxis];
+
+function blockCollisions() {
+    for (let i = 0; i < allBlocks.length; i++) {
+                
+        if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == 1) {
+            if (
+                (
+                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) &&
+                        (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)
+                    ) ||
+                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
+                (ball.x + ballDimension == allBlocks.bottomLeft[0])
+            ) {
+                ball.moveSecondQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+            else if (
+                (
+                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
+                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
+                (ball.y + ballDimension == allBlocks.bottomLeft[1])
+            ) {
+                ball.moveFourthQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+        }// first case ended
+        if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == -1) {
+            if (
+                (
+                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
+                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
+                (ball.x + ballDimension == allBlocks.bottomLeft[0] + blockDim.width)
+            ) {
+                ball.moveFourthQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+            else if (
+                (
+                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
+                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
+                (ball.y == allBlocks.bottomLeft[1] + blockDim.height)
+            ) {
+                ball.moveSecondQuadrant().move();
+                // ball.move();
+                moveBall();
+                removeBlock(i);
+            }
+        }// second case ended
+        if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == 1) {
+            if (
+                (
+                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
+                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
+                (ball.x == allBlocks.bottomLeft[0] + blockDim.width)
+            ) {
+                ball.moveFirstQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+            else if (
+                (
+                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
+                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
+                (ball.y + ballDimension == allBlocks.bottomLeft[1])
+            ) {
+                ball.moveThirdQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+        }// third case ended
+        if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == -1) {
+            if (
+                (
+                    ((ball.y + ballDimension >= allBlocks[i].bottomLeft[1]) && (allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y + ballDimension)) ||
+                    (ball.y >= allBlocks[i].bottomLeft[1] && allBlocks[i].bottomLeft[1] + blockDim.height >= ball.y)) &&
+                (ball.x + ballDimension == allBlocks.bottomLeft[0])
+            ) {
+                ball.moveThirdQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+            else if (
+                (
+                    ((ball.x + ballDimension >= allBlocks[i].bottomLeft[0]) && (allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x + ballDimension)) ||
+                    (ball.x >= allBlocks[i].bottomLeft[0] && allBlocks[i].bottomLeft[0] + blockDim.width >= ball.x)) &&
+                (ball.y == allBlocks.bottomLeft[1] + blockDim.height)
+            ) {
+                ball.moveFirstQuadrant().move();
+                moveBall();
+                removeBlock(i);
+            }
+        }// fourth case ended
+        
+    }
+}
+function removeBlock(i) {
+    allBlocks.splice(i, 1);
+    let theBlocks = Array.from(document.querySelectorAll('.block'));
+    theBlocks[i].classList.remove('block');
+    if (theBlocks.length == 0) { 
+        clearInterval(ballTimer);
+        document.removeEventListener('keydown', moveUser);
+    }
+}
+
 
 //-----------------------------------
 // MOVE USER
@@ -342,6 +258,80 @@ function moveUser(e) {
 }
 //--------------------------------------------
 
+// CHECKING FOR COLLISIONS
+function checkBorderCollision() {
+    if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == 1) {// DIRECTION [2,2]
+        if (// MEET THE RIGHT BORDER
+            (ball.x == (gridDimension[0] - ballDimension)) &&
+            (ball.y<(gridDimension[1] - ballDimension))
+        ) {
+            ball.moveSecondQuadrant().move();
+        } else if (// MEET THE TOP
+            (ball.x > 0 && ball.x < (gridDimension[0] - ballDimension)) &&
+            (ball.y == (gridDimension[1] - ballDimension))
+        ) {
+            ball.moveFourthQuadrant().move();
+        }
+        else if (
+            (ball.x == (gridDimension[0] - ballDimension)) &&
+            (ball.y == (gridDimension[1] - ballDimension))
+        ) {
+            ball.moveThirdQuadrant().move();
+        }
+    }
+    if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == 1) {// DIRECTION [-2,2]
+        if (// MEET THE LEFT
+            (ball.x == 0 &&
+            (ball.y>0 && ball.y<(gridDimension[1] - ballDimension)))
+        ) {
+            ball.moveFirstQuadrant().move();
+        } else if (// MEET THE TOP
+            (ball.x > 0 && ball.x < (gridDimension[0] - ballDimension)) &&
+            (ball.y == (gridDimension[1] - ballDimension))
+        ) {
+            ball.moveThirdQuadrant().move();
+        }
+        else if (
+            (ball.x == 0 &&
+            (ball.y == (gridDimension[1] - ballDimension)))
+        ) {
+            ball.moveFourthQuadrant().move();
+        }
+    }
+    if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == -1) {// DIRECTION [-2,-2]
+        if (// MEET THE LEFT
+            (ball.x == 0 &&
+            (ball.y<(gridDimension[1] - ballDimension)))
+        ) {
+            ball.moveFourthQuadrant().move();
+        }
+        else if (// MEET THE BOTTOM/ USER
+            ((ball.x  >= player.x) && (ball.x < player.x+blockDim.width)) &&
+            (ball.y == player.y+blockDim.height)
+        ) {
+            ball.moveSecondQuadrant().move();
+        }
+    }
+    if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == -1) {// DIRECTION [2,-2]
+        if (// MEET THE RIGHT BORDER
+            (ball.x == (gridDimension[0] - ballDimension)) &&
+            (ball.y<(gridDimension[1] - ballDimension))
+        ) {
+            ball.moveThirdQuadrant().move();
+        }
+        else if (// MEET THE BOTTOM/ USER
+            ((ball.x  >= player.x) && (ball.x < player.x+blockDim.width)) &&
+            (ball.y == player.y+blockDim.height)
+        ) {
+            ball.moveFirstQuadrant().move();
+        }
+    }
+    moveBall();
+}
 
-let ballTimer = setInterval(bounceBall,50);
-document.addEventListener('keydown',moveUser);
+
+
+
+let ballTimer = setInterval(bounceBall,10);
+document.addEventListener('keydown', moveUser);
+
