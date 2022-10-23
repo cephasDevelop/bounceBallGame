@@ -40,8 +40,8 @@ class Bouncing{
         this.y = y;
         this.xTwo = this.x + ballDimension;
         this.yTwo = this.y + ballDimension;
-        this.xAvg = this.x+ 0.5*ballDimension;
-        this.yAvg = this.y+ 0.5*ballDimension;
+        this.xAvg = (this.x + 0.5*ballDimension).toFixed(2);
+        this.yAvg = (this.y + 0.5*ballDimension).toFixed(2);
         this.arrMotion = MOTION_DIRECTION.firstQuadrant;
         this.moveFirstQuadrant = function () {
             this.arrMotion = MOTION_DIRECTION.firstQuadrant
@@ -117,81 +117,25 @@ function moveBall() {
 function bounceBall() {
     ball.move();
     moveBall();
-    checkBorderCollision();
-    blockCollisions();
+    checkBorderCollision(allBlocks);
+    // blockCollisions();
     checkGameOver();
 
 }
 //-------------------------------------------------------------------------
-// CHECKING INDIVIDUAL BLOCKS
-function blockCollisions() {
-    for (let i = 0; i < allBlocks.length; i++) {
-        //  BALL FROM BOTTOM
-        if (oneBlock(i)) {
-            let bbb = allBlocks[i]
-            console.log(`the x-axis = ${bbb.bottomLeft[0]}`);
-            console.log(`the y-axis = ${bbb.bottomLeft[1]}`);
-            removeBlock(i);
-            return;
-        }
-    }
-}
-function oneBlock(idx) {
-    if (// BALL FROTOM
-        ((ball.yTwo == allBlocks[idx].bottomLeft[1]) &&
-        (ball.xAvg >= allBlocks[idx].bottomLeft[0] && ball.xAvg <= allBlocks[idx].bottomRight[0]))
-    ) {
-        if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == 1) {
-            ball.moveFourthQuadrant();
-            ball.move();
-        } else if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == 1) {
-            ball.moveThirdQuadrant();
-            ball.move();
-        }
-        retuue;
-    } else if (// BALL TOP
-        (ball.y == allBlocks[idx].bottomLeft[1]) &&
-        (ball.xAvg >= allBlocks[idx].bottomLeft[0] && ball.xAvg <= allBlocks[idx].bottomRight[0])
-    ) {
-        if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == -1) {
-            ball.moveFirstQuadrant();
-            ball.move();
-        } else if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == -1) {
-            ball.moveSecondQuadrant();
-            ball.move();
-        }
-        retuue;
-    } else if (// BALL EFT
-        (ball.xTwo == allBlocks[idx].bottomLeft[0]) &&
-        (ball.yAvg >= allBlocks[idx].bottomLeft[1] && ball.yAvg <= allBlocks[idx].topLeft[1])
-    ) {
-        if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == 1) {
-            ball.moveSecondQuadrant();
-            ball.move();
-        } else if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == -1) {
-            ball.moveThirdQuadrant();
-            ball.move();
-        }
-        retuue;
-    } else if (// BALL GHT
-        (ball.x == allBlocks[idx].bottomRight[0]) &&
-        (ball.yAvg >= allBlocks[idx].bottomLeft[1] && ball.yAvg <= allBlocks[idx].topLeft[1])
-    ) {
-        if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == 1) {
-            ball.moveFirstQuadrant();
-            ball.move();
-        } else if (ball.arrMotion[0] == -1 && ball.arrMotion[1] == 1) {
-            ball.moveFirstQuadrant();
-            ball.move();
-        }
-        return true;
-    } else { 
-        return false;
-    }
-}
+
 //------------------------------------------------------------------------
 // CHECKING FOR BORDER COLLISIONS
-function checkBorderCollision() {
+function checkBorderCollision(arr) {
+    for (let i = 0; i < arr.length;i++){
+        if ((ball.y >= arr[i].bottomLeft[1]) && (ball.y <= arr[i].topLeft[1]) &&
+            ((ball.x >= arr[i].bottomLeft[0]) && (ball.x <= arr[i].bottomRight[0])
+            )) { 
+            const theBlocks = Array.from(document.querySelectorAll('.block'));
+            removeBlock(i)
+            }
+        
+    }
     if (ball.arrMotion[0] == 1 && ball.arrMotion[1] == 1) {// DIRECTION [2,2]
         if (// MEET THE RIGHT BORDER
             (ball.x == (gridDimension[0] - ballDimension)) &&
@@ -275,8 +219,9 @@ function checkBorderCollision() {
 function removeBlock(idx) {
     allBlocks.splice(idx, 1);
     let theBlocks = Array.from(document.querySelectorAll('.block'));
+    console.log(theBlocks.length);
     theBlocks[idx].classList.remove('block');
-    if (theBlocks.length == 0) { 
+    if (theBlocks.length == 1) { 
         clearInterval(ballTimer);
         document.removeEventListener('keydown', moveUser);
     }
