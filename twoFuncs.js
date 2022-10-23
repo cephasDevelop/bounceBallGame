@@ -1,8 +1,3 @@
-
-
-
-
-
 //--------------------------------------------------
 function removeBlock(idx) {
     allBlocks.splice(idx, 1);

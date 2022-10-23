@@ -127,7 +127,6 @@ function bounceBall() {
 function blockCollisions() {
     for (let i = 0; i < allBlocks.length; i++) {
         //  BALL FROM BOTTOM
-        
         if (oneBlock(i)) {
             let bbb = allBlocks[i]
             console.log(`the x-axis = ${bbb.bottomLeft[0]}`);
@@ -190,7 +189,6 @@ function oneBlock(idx) {
         return false;
     }
 }
-
 //------------------------------------------------------------------------
 // CHECKING FOR BORDER COLLISIONS
 function checkBorderCollision() {
