@@ -14,6 +14,8 @@ const MOTION_DIRECTION = {
     thirdQuadrant: [-1, -1],
     fourthQuadrant:[1, -1]
 };
+const initialMotion = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
+
 
 class Block{ 
     constructor(xAxis,yAxis) {
@@ -42,7 +44,7 @@ class Bouncing{
         this.yTwo = this.y + ballDimension;
         this.xAvg = (this.x + 0.5*ballDimension).toFixed(2);
         this.yAvg = (this.y + 0.5*ballDimension).toFixed(2);
-        this.arrMotion = MOTION_DIRECTION.firstQuadrant;
+        this.arrMotion = initialMotion[Math.floor(Math.random() * (initialMotion.length + 1))];
         this.moveFirstQuadrant = function () {
             this.arrMotion = MOTION_DIRECTION.firstQuadrant
         }
@@ -58,7 +60,16 @@ class Bouncing{
         this.move = function () {
             this.x += this.arrMotion[0];
             this.y += this.arrMotion[1];
-         }
+        }
+        this.shuffleStart = function() {
+            for (let i = initialMotion.length - 1; i > 0; i--){
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = initialMotion[i];
+                initialMotion[i] = initialMotion[j];
+                initialMotion[j] = temp;
+            }
+        return initialMotion;
+    }
      }
 }
 
@@ -131,7 +142,6 @@ function checkBorderCollision(arr) {
         if ((ball.y >= arr[i].bottomLeft[1]) && (ball.y <= arr[i].topLeft[1]) &&
             ((ball.x >= arr[i].bottomLeft[0]) && (ball.x <= arr[i].bottomRight[0])
             )) { 
-            const theBlocks = Array.from(document.querySelectorAll('.block'));
             removeBlock(i)
             }
         

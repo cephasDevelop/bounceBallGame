@@ -128,3 +128,6 @@ function blockCollisions() {
         }// fourth case ended   
     }
 }
+
+const j = Math.floor(Math.random() * (4 + 1));
+// console.log(j);
